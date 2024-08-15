@@ -1,2 +1,45 @@
-<h2>Create Expected Results</h2>
-<p>Esta es la página de Create Expected Results.</p>
+<div class="container mt-4">
+    <h1>Expected Results</h1>
+    <div class="mb-3">
+        <label for="expectedResultsName" class="form-label">Expected Results Name</label>
+        <input type="text" class="form-control" id="expectedResultsName" placeholder="Enter expected results name" required>
+    </div>
+    <button id="createExpectedResultsBtn" class="btn btn-primary">Create Expected Results</button>
+    
+    <h2 class="mt-5">Existing Expected Results</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name Expected Results</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="expectedResultsTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Editing Expected Result -->
+<div class="modal fade" id="editExpectedResultModal" tabindex="-1" aria-labelledby="editExpectedResultModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editExpectedResultModalLabel">Edit Expected Result</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editExpectedResultId">
+                <div class="mb-3">
+                    <label for="editExpectedResultName" class="form-label">Expected Result Name</label>
+                    <input type="text" class="form-control" id="editExpectedResultName" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateExpectedResultBtn">Update Expected Result</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     loadScript('levelsuite2', initializeLevelSuite2);  // Cargar y ejecutar script específico                
                 } else if (pageUrl.includes('actions.html')) {
                     loadScript('actions', initializeAction);  // Cargar y ejecutar script específico
-            }
+                } else if (pageUrl.includes('expectedresults.html')) {
+                    loadScript('expectedresults', initializeExpectedResults);  // Cargar y ejecutar script específico
+                }
             })
             .catch(error => {
                 contentDiv.innerHTML = `<p>${error.message}</p>`;
