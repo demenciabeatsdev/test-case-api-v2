@@ -163,5 +163,4 @@ function initializeAction() {
 
     // Inicializar la carga de acciones
     loadActions();
-    
 }
