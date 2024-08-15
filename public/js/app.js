@@ -13,8 +13,12 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 contentDiv.innerHTML = data;
                 if (pageUrl.includes('levelsuite1.html')) {
-                    loadLevelSuite1Script();  // Cargar y ejecutar script específico
-                }
+                    loadScript('levelsuite1', initializeLevelSuite1);  // Cargar y ejecutar script específico
+                } else if (pageUrl.includes('levelsuite2.html')) {
+                    loadScript('levelsuite2', initializeLevelSuite2);  // Cargar y ejecutar script específico                
+                } else if (pageUrl.includes('actions.html')) {
+                    loadScript('actions', initializeAction);  // Cargar y ejecutar script específico
+            }
             })
             .catch(error => {
                 contentDiv.innerHTML = `<p>${error.message}</p>`;
@@ -33,20 +37,26 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Función para cargar y ejecutar el script de levelsuite1.js
-    function loadLevelSuite1Script() {
+    // Función para cargar y ejecutar un script dado su nombre
+    function loadScript(scriptName, callback) {
+        const scriptPath = `./js/${scriptName}.js`;
+        
         // Verificar si el script ya está cargado
-        if (!document.querySelector('script[src="./js/levelsuite1.js"]')) {
+        if (!document.querySelector(`script[src="${scriptPath}"]`)) {
             const script = document.createElement('script');
-            script.src = './js/levelsuite1.js';
+            script.src = scriptPath;
             script.onload = () => {
-                console.log('Level Suite 1 script loaded and executed.');
-                initializeLevelSuite1();  // Ejecutar la inicialización
+                console.log(`${scriptName} script loaded and executed.`);
+                if (typeof callback === 'function') {
+                    callback();  // Ejecutar la inicialización si hay un callback proporcionado
+                }
             };
             document.body.appendChild(script);
         } else {
-            console.log('Level Suite 1 script already loaded.');
-            initializeLevelSuite1();  // Ejecutar la inicialización si ya está cargado
+            console.log(`${scriptName} script already loaded.`);
+            if (typeof callback === 'function') {
+                callback();  // Ejecutar la inicialización si el script ya está cargado
+            }
         }
     }
 });
