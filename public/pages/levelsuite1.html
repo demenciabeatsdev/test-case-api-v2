@@ -1,2 +1,45 @@
-<h2>Create Level Suite 1</h2>
-<p>Esta es la página de Create Level Suite 1.</p>
+<div class="container mt-4">
+    <h1>Test Suite Level 1</h1>
+    <div class="mb-3">
+        <label for="suiteName" class="form-label">Level Test Suite 1 Name</label>
+        <input type="text" class="form-control" id="suiteName" placeholder="Enter test suite name" required>
+    </div>
+    <button id="createSuiteBtn" class="btn btn-primary">Create Test Suite</button>
+    
+    <h2 class="mt-5">Existing Suites</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="suiteTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Editing Suite -->
+<div class="modal fade" id="editSuiteModal" tabindex="-1" aria-labelledby="editSuiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSuiteModalLabel">Edit Suite</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editSuiteId">
+                <div class="mb-3">
+                    <label for="editSuiteName" class="form-label">Suite Name</label>
+                    <input type="text" class="form-control" id="editSuiteName" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateSuiteBtn">Update Suite</button>
+            </div>
+        </div>
+    </div>
+</div>

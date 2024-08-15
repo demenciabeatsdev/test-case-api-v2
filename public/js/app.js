@@ -12,11 +12,17 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(data => {
                 contentDiv.innerHTML = data;
+                if (pageUrl.includes('levelsuite1.html')) {
+                    loadLevelSuite1Script();  // Cargar y ejecutar script específico
+                }
             })
             .catch(error => {
                 contentDiv.innerHTML = `<p>${error.message}</p>`;
             });
     }
+
+    // Cargar la página inicial
+    loadPage('./pages/home.html');
 
     // Agregar eventos a los enlaces de navegación
     document.querySelectorAll('.nav-link').forEach(link => {
@@ -27,6 +33,20 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Cargar la página inicial
-    loadPage('./pages/home.html');
+    // Función para cargar y ejecutar el script de levelsuite1.js
+    function loadLevelSuite1Script() {
+        // Verificar si el script ya está cargado
+        if (!document.querySelector('script[src="./js/levelsuite1.js"]')) {
+            const script = document.createElement('script');
+            script.src = './js/levelsuite1.js';
+            script.onload = () => {
+                console.log('Level Suite 1 script loaded and executed.');
+                initializeLevelSuite1();  // Ejecutar la inicialización
+            };
+            document.body.appendChild(script);
+        } else {
+            console.log('Level Suite 1 script already loaded.');
+            initializeLevelSuite1();  // Ejecutar la inicialización si ya está cargado
+        }
+    }
 });

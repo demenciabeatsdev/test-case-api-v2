@@ -29,7 +29,16 @@ const createTestSuiteLevel1 = async (req, res) => {
             'INSERT INTO test_suite_level_1 (name) VALUES ($1) RETURNING *',
             [name]
         );
-        res.status(201).json(result.rows[0]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Test Suite Level 1 not Create' });
+        }
+
+        res.status(201).json({
+            message: 'Test Suite Level 1 was successfully created.',
+            data: result.rows[0]
+        });
+        
+        
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -44,22 +53,37 @@ const updateTestSuiteLevel1 = async (req, res) => {
             'UPDATE test_suite_level_1 SET name = $1 WHERE id = $2 RETURNING *',
             [name, id]
         );
-        res.json(result.rows[0]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Test Suite Level 1 not found' });
+        }
+
+        res.json({
+            message: 'Test Suite Level 1 was successfully updated.',
+            data: result.rows[0]
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: `Failed to update Test Suite Level 1: ${error.message}` });
     }
 };
+
 
 // Eliminar una suite de nivel 1
 const deleteTestSuiteLevel1 = async (req, res) => {
     const { id } = req.params;
     try {
-        await pool.query('DELETE FROM test_suite_level_1 WHERE id = $1', [id]);
-        res.status(204).send();
+        const result = await pool.query('DELETE FROM test_suite_level_1 WHERE id = $1 RETURNING *', [id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Test Suite Level 1 not found' });
+        }
+
+        res.status(200).json({ message: `Test Suite Level 1 with ID ${id} was successfully deleted.` });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 module.exports = {
     getTestSuitesLevel1,
