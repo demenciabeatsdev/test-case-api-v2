@@ -54,8 +54,11 @@ const updateTestSuiteLevel2 = async (req, res) => {
 const deleteTestSuiteLevel2 = async (req, res) => {
     const { id } = req.params;
     try {
-        await pool.query('DELETE FROM test_suite_level_2 WHERE id = $1', [id]);
-        res.status(204).send();
+        const result = await pool.query('DELETE FROM test_suite_level_2 WHERE id = $1', [id]);
+    if (result.rowCount === 0) { 
+        return res.status(404).json({ error: 'Test Suite Level 2 not found' });
+    }      
+    res.status(200).json({ message: `Test Suite Level 2 with ID ${id} was successfully deleted.` });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
