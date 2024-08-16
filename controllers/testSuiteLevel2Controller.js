@@ -73,6 +73,28 @@ const deleteTestSuiteLevel2 = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+// Obtener todas las suites de nivel 2 relacionadas con una suite de nivel 1
+const getTestSuitesLevel2ByLevel1Id = async (req, res) => {
+    const { level1Id } = req.params;
+    try {
+        const result = await pool.query(`
+            SELECT 
+                ts2.*, 
+                ts1.name as level_1_name 
+            FROM 
+                test_suite_level_2 ts2
+            JOIN 
+                test_suite_level_1 ts1 
+            ON 
+                ts2.level_1_id = ts1.id
+            WHERE 
+                ts2.level_1_id = $1
+        `, [level1Id]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 module.exports = {
     getTestSuitesLevel2,
@@ -80,4 +102,5 @@ module.exports = {
     createTestSuiteLevel2,
     updateTestSuiteLevel2,
     deleteTestSuiteLevel2,
+    getTestSuitesLevel2ByLevel1Id, // Exportar la nueva función
 };

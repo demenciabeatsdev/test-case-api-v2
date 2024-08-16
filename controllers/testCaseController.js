@@ -1,25 +1,113 @@
 const pool = require('../config/database');
+const ExcelJS = require('exceljs');
+const { response } = require('express');
 
-// Obtener todos los casos de prueba con sus acciones y resultados esperados
-const getTestCases = async (req, res) => {
+const exportTestCasesToExcel = async (req, res) => {
+    const { level2 } = req.query;
+
     try {
         const result = await pool.query(`
             SELECT 
                 tc.*, 
+                ts1.name as level_1_name,
+                ts2.name as level_2_name,
                 json_agg(DISTINCT ta.*) as actions,
                 json_agg(DISTINCT er.*) as expected_results
             FROM test_case tc
+            LEFT JOIN test_suite_level_2 ts2 ON ts2.id = tc.level_2_id
+            LEFT JOIN test_suite_level_1 ts1 ON ts1.id = ts2.level_1_id
             LEFT JOIN test_case_actions tca ON tca.test_case_id = tc.id
             LEFT JOIN test_actions ta ON ta.id = tca.action_id
             LEFT JOIN test_case_expected_results tcer ON tcer.test_case_id = tc.id
             LEFT JOIN expected_results er ON er.id = tcer.expected_result_id
-            GROUP BY tc.id
-        `);
+            WHERE tc.level_2_id = $1
+            GROUP BY tc.id, ts1.name, ts2.name
+        `, [level2]);
+
+        const testCases = result.rows;
+
+        // Crear un nuevo workbook y una nueva hoja
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Test Cases');
+
+        // Añadir encabezados
+        worksheet.columns = [
+            { header: 'Level 1 Test Suite', key: 'level_1_name', width: 20 },
+            { header: 'Level 2 Test Suite', key: 'level_2_name', width: 20 },
+            { header: 'Name', key: 'name', width: 30 },
+            { header: 'Importance', key: 'importance', width: 10 },
+            { header: 'Summary', key: 'summary', width: 40 },
+            { header: 'Preconditions', key: 'preconditions', width: 40 },
+            { header: 'Actions', key: 'actions', width: 30 },
+            { header: 'Expected Results', key: 'expected_results', width: 30 },
+        ];
+
+        // Añadir las filas de los casos de prueba
+        testCases.forEach(testCase => {
+            const actions = testCase.actions || [];
+            const expectedResults = testCase.expected_results || [];
+
+            actions.forEach((action, index) => {
+                worksheet.addRow({
+                    level_1_name: index === 0 ? testCase.level_1_name : '',
+                    level_2_name: index === 0 ? testCase.level_2_name : '',
+                    name: index === 0 ? testCase.name : '',
+                    importance: index === 0 ? testCase.importance : '',
+                    summary: index === 0 ? testCase.summary : '',
+                    preconditions: index === 0 ? testCase.preconditions : '',
+                    actions: action.description,
+                    expected_results: index === 0 ? expectedResults[0]?.description : ''
+                });
+            });
+        });
+
+        // Enviar el archivo Excel como respuesta
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=test-cases.xlsx');
+
+        await workbook.xlsx.write(res);
+        res.end();
+    } catch (error) {
+        console.error('Error exporting test cases to Excel:', error);
+        res.status(500).json({ error: 'Failed to export test cases' });
+    }
+};
+// Obtener todos los casos de prueba con sus acciones y resultados esperados
+const getTestCases = async (req, res) => {
+    const { level2 } = req.query;  // Obtener el level2 de la consulta
+    try {
+        let query = `
+            SELECT 
+                tc.*, 
+                ts1.name as level_1_name,
+                ts2.name as level_2_name,
+                json_agg(DISTINCT ta.*) as actions,
+                json_agg(DISTINCT er.*) as expected_results
+            FROM test_case tc
+            LEFT JOIN test_suite_level_2 ts2 ON ts2.id = tc.level_2_id
+            LEFT JOIN test_suite_level_1 ts1 ON ts1.id = ts2.level_1_id
+            LEFT JOIN test_case_actions tca ON tca.test_case_id = tc.id
+            LEFT JOIN test_actions ta ON ta.id = tca.action_id
+            LEFT JOIN test_case_expected_results tcer ON tcer.test_case_id = tc.id
+            LEFT JOIN expected_results er ON er.id = tcer.expected_result_id
+        `;
+
+        let queryParams = [];
+        if (level2) {
+            query += ` WHERE tc.level_2_id = $1 `;
+            queryParams.push(level2);
+        }
+
+        query += `GROUP BY tc.id, ts1.name, ts2.name`;
+
+        const result = await pool.query(query, queryParams);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 
 // Obtener un caso de prueba por ID con sus acciones y resultados esperados
 const getTestCaseById = async (req, res) => {
@@ -157,4 +245,5 @@ module.exports = {
     createTestCase,
     updateTestCase,
     deleteTestCase,
+    exportTestCasesToExcel,
 };

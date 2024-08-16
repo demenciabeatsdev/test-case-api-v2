@@ -1,0 +1,43 @@
+<div class="container mt-4">
+    <h1>Export Test Cases</h1>
+    
+    <!-- Filtros -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="filterLevel1Select" class="form-label">Level 1 Test Suite</label>
+            <select class="form-select" id="filterLevel1Select">
+                <option value="" disabled selected>Select Level 1 Test Suite</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="filterLevel2Select" class="form-label">Level 2 Test Suite</label>
+            <select class="form-select" id="filterLevel2Select">
+                <option value="" disabled selected>Select Level 2 Test Suite</option>
+            </select>
+        </div>
+    </div>
+
+    <button id="filterBtn" class="btn btn-primary mb-3">Filter Test Cases</button>
+    <button id="exportBtn" class="btn btn-success mb-3">Export to Excel</button>
+
+    <!-- Tabla de Casos de Prueba -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Level 1 Test Suite</th>
+                    <th>Level 2 Test Suite</th>
+                    <th>Name</th>
+                    <th>Importance</th>
+                    <th>Summary</th>
+                    <th>Preconditions</th>
+                    <th>Actions</th>
+                    <th>Expected Results</th>
+                </tr>
+            </thead>
+            <tbody id="testCasesTableBody">
+                <!-- Las filas se rellenarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>

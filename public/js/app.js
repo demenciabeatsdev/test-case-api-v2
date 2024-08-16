@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     loadScript('expectedresults', initializeExpectedResults);
                 } else if (pageUrl.includes('testcasecreate.html')) {
                     loadScript('testcasecreate', testCaseCreate);
+                } else if (pageUrl.includes('exporttestcase.html')) {
+                    loadScript('exporttestcase', initializeTestCaseFilter);
                 }
             })
             .catch(error => {

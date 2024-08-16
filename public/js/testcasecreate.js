@@ -252,7 +252,14 @@ function testCaseCreate() {
 
     // Function to load Test Cases into Table
     function loadTestCases() {
-        fetch('/api/test-cases')
+        const level2Id = document.getElementById('level2Select').value;
+    
+        let url = '/api/test-cases';
+        if (level2Id) {
+            url += `?level2=${level2Id}`;
+        }
+    
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 testCasesTableBody.innerHTML = '';
@@ -260,10 +267,11 @@ function testCaseCreate() {
                     // Verifica que el objeto testCase esté bien formado y que tenga acciones y resultados esperados
                     const actions = Array.isArray(testCase.actions) ? testCase.actions : [];
                     const expectedResults = Array.isArray(testCase.expected_results) ? testCase.expected_results : [];
-
+    
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${testCase.id || 'N/A'}</td>
+                        <td>${testCase.level_1_name || 'N/A'}</td>
+                        <td>${testCase.level_2_name || 'N/A'}</td>
                         <td>${testCase.name || 'N/A'}</td>
                         <td>${testCase.importance || 'N/A'}</td>
                         <td>${testCase.summary || 'N/A'}</td>
@@ -281,6 +289,7 @@ function testCaseCreate() {
             })
             .catch(error => console.error('Error loading Test Cases:', error));
     }
+    
 
     function attachEventListeners() {
         document.querySelectorAll('.edit-test-case').forEach(button => {

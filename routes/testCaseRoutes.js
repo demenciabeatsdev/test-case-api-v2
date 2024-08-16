@@ -6,6 +6,7 @@ const {
     createTestCase,
     updateTestCase,
     deleteTestCase,
+    exportTestCasesToExcel,
 } = require('../controllers/testCaseController');
 
 router.get('/', getTestCases);
@@ -13,5 +14,7 @@ router.get('/:id', getTestCaseById);
 router.post('/', createTestCase);
 router.put('/:id', updateTestCase);
 router.delete('/:id', deleteTestCase);
+router.get('/export/excel', exportTestCasesToExcel);
+
 
 module.exports = router;
