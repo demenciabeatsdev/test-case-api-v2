@@ -12,17 +12,17 @@ Test Case API v2 es una aplicación desarrollada en Node.js con Express que perm
 ## Instalación
 
 1. Clona este repositorio en tu máquina local.
-    \`\`\`bash
+
     git clone https://github.com/tu-usuario/test-case-api-v2.git
-    \`\`\`
+
 2. Navega al directorio del proyecto.
-    \`\`\`bash
+    
     cd test-case-api-v2
-    \`\`\`
+    
 3. Instala las dependencias necesarias.
-    \`\`\`bash
+    
     npm install
-    \`\`\`
+    
 
 ## Uso
 
@@ -30,27 +30,26 @@ Test Case API v2 es una aplicación desarrollada en Node.js con Express que perm
 
 Para ejecutar la aplicación en modo de desarrollo con \`nodemon\`, usa el siguiente comando:
 
-\`\`\`bash
+
 npm run dev
-\`\`\`
+
 
 Para ejecutar la aplicación en modo de producción:
 
-\`\`\`bash
+
 npm start
-\`\`\`
+
 
 ### Configuración
 
 Asegúrate de tener un archivo \`.env\` en la raíz del proyecto con las siguientes variables de entorno configuradas:
 
-\`\`\`env
+
 DB_HOST=tu_host_de_base_de_datos
 DB_USER=tu_usuario_de_base_de_datos
 DB_PASSWORD=tu_contraseña_de_base_de_datos
 DB_NAME=tu_nombre_de_base_de_datos
 DB_PORT=puerto_de_tu_base_de_datos
-\`\`\`
 
 ### Rutas API
 
